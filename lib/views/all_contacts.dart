@@ -12,11 +12,16 @@ class AllContacts extends StatelessWidget {
     List<Contact> sortedContacts =
         allContacts.map((e) => Contact.fromJson(e)).toList();
     sortedContacts.sort((a, b) => a.firstName.compareTo(b.firstName));
+    // ScrollController scrollController = ScrollController();
+
+    // scrollController.
+
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          SliverList(
+            delegate: SliverChildListDelegate([
               Container(
                 color: Colors.white,
                 padding: const EdgeInsets.all(16),
@@ -47,34 +52,39 @@ class AllContacts extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: sortedContacts.length,
-                  itemBuilder: (context, index) {
-                    Contact contact = sortedContacts[index];
-                    int randomNumber = Random().nextInt(10);
-                    return ListTile(
-                      leading: Text(
-                        contact.firstName[0],
-                        style: const TextStyle(
-                          color: Colors.teal,
-                          fontSize: 20,
-                        ),
-                      ),
-                      title: Row(
-                        children: [
-                          CircleAvatar(
-                            child: Text(contact.firstName[0]),
-                            backgroundColor: randomColors[randomNumber],
-                          ),
-                          const SizedBox(width: 20),
-                          Text("${contact.firstName} ${contact.lastName}"),
-                        ],
-                      ),
-                    );
-                  })
-            ],
+            ]),
           ),
-        ));
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                Contact contact = sortedContacts[index];
+                int randomNumber = Random().nextInt(10);
+                return ListTile(
+                  leading: Text(
+                    contact.firstName[0],
+                    style: const TextStyle(
+                      color: Colors.teal,
+                      fontSize: 20,
+                    ),
+                  ),
+                  title: Row(
+                    children: [
+                      CircleAvatar(
+                        child: Text(contact.firstName[0]),
+                        backgroundColor: randomColors[randomNumber],
+                      ),
+                      const SizedBox(width: 20),
+                      Text("${contact.firstName} ${contact.lastName}"),
+                    ],
+                  ),
+                );
+              },
+              childCount: sortedContacts.length,
+              addAutomaticKeepAlives: true,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
